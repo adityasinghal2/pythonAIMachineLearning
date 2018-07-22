@@ -5,6 +5,7 @@ import csv
 
 
 def csv_to_list(oldFile):
+    l =  []
     file_name = oldFile
     try:
         csvfile = open(file_name, 'r')
@@ -73,7 +74,7 @@ df1_names = df1.keys().tolist()
 # Scale quantitative variables
 min_max_scaler = preprocessing.MinMaxScaler()
 x_scaled = min_max_scaler.fit_transform(df1)
-df1 = pd.DataFrame(df1)
+df1 = pd.DataFrame(x_scaled)
 df1.columns = df1_names
 
 # Get final df
