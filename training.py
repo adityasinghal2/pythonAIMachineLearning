@@ -4,45 +4,19 @@ from sklearn import preprocessing
 import csv
 
 
-def fixText(text):
-    row = []
-    z = text.find(',')
-    if z == 0:  row.append('')
-    else:   row.append(text[:z])
-    for x in range(len(text)):
-        if text[x] != ',':  pass
-        else:
-            if x == (len(text)-1):  row.append('')
-            else:
-                if ',' in text[(x+1):]:
-                    y = text.find(',', (x+1))
-                    c = text[(x+1):y]
-                else:   c = text[(x+1):]
-                row.append(c)
-    return row
-
-def createTuple(oldFile):
-    f1 = open(oldFile, "r")
-    tup = []
-    first_row_processed = False
-    while 1:
-        text = f1.readline()
-        if text == "":  break
-        else:   pass
-        if text[-1] == '\n':
-            text = text[:-1]
-        else:   pass
-        row = fixText(text)
-        if first_row_processed == True:
-            tup.append(row)
-        first_row_processed = True
-    # print (type(tup))
-    # print (tup)
-    return tup
-
-
-
+def csv_to_list(oldFile):
+    file_name = oldFile
+    try:
+        csvfile = open(file_name, 'r')
+    except:
+        print("File not found")
+    csvReader = list(csv.reader(csvfile, delimiter=","))
+    for row in csvReader[1:]:
+        l.append(row)
+    return l
+    
 def addMetadata(csv_array, fileName):
+    print (csv_array[0])
     rows=len(csv_array)
     atts=len(csv_array[0])-1
     metadata=[]
@@ -99,7 +73,7 @@ df1_names = df1.keys().tolist()
 # Scale quantitative variables
 min_max_scaler = preprocessing.MinMaxScaler()
 x_scaled = min_max_scaler.fit_transform(df1)
-df1 = pd.DataFrame(x_scaled)
+df1 = pd.DataFrame(df1)
 df1.columns = df1_names
 
 # Get final df
@@ -109,5 +83,5 @@ print (type(final_df))
 final_df[:-5].to_csv('./NormalizedTrainingData.csv', index = False)
 final_df.tail(5).to_csv('./NormalizedTestData.csv', index = False)
 
-addMetadata(createTuple('./NormalizedTrainingData.csv'), 'Training')
-addMetadata(createTuple('./NormalizedTestData.csv'), 'Testing')
+addMetadata(csv_to_list('./NormalizedTrainingData.csv'), 'Training')
+addMetadata(csv_to_list('./NormalizedTestData.csv'), 'Testing')
